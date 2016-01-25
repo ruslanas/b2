@@ -1,55 +1,85 @@
 #include "document.hpp"
+#include "main.h"
 
 using namespace std;
 using namespace R;
 
 int main(int argc, char * argv[]) {
 
-	Document doc("App");
+	Node fcp_root = Node("fcpxml");
+	Document doc(fcp_root);
 	
-	if(argc > 1) {
-		doc.load(argv[1]);
+	Node resources = Node("resources");
+	doc.root.append(resources);
+	doc.root.setAttribute("version", "1.5");
+	
+	Node lib = Node("library");
+	doc.root.append(lib);
+	lib.setAttribute("location");
+	
+	Node evt = Node("event");
+	evt.setAttribute("name", "event_name");
+	evt.setAttribute("uid");
+	lib.append(evt);
+	Node project = Node("project");
+	lib.append(project);
+	
+	PtrNode seq = project.append("sequence"); // dynamically allocates memory!
+	PtrNode spine = seq->append("spine");
+	PtrNode gap = spine->append("gap");
+
+	// read subs from std
+
+	bool start = true;
+	int ln = 0;
+	while (!cin.eof()) {
+		string line;
+
+		getline(cin, line);
+
+		if (line.empty()) {
+			start = true;
+			continue;
+		}
+
+		if (start) {
+			// skip first line
+			ln = 0;
+			start = false;
+			continue;
+		}
+
+		ln++;
+		PtrNode titleNode = doc.createNode("title");
+		titleNode->setAttribute("lane", ln);
+		PtrNode txt = doc.createNode("text");
+		PtrNode txtStyle = doc.createNode("text-style");
+		PtrNode txtStyleDef = doc.createNode("text-style-def");
+
+		titleNode->setAttribute("name", "Basic Title");
+		titleNode->append(txt);
+		titleNode->append(txtStyleDef);
+
+		txt->append(txtStyle);
+		txtStyle->setValue(line);
+		gap->append(titleNode);
+		
 	}
-	
-	Node child = Node("todo");
-	doc.root.append(child);
-	
-	doc.root.setAttribute("title", "B2");
-	doc.root.setAttribute("version", "1.0");
-	
-	Node t1 = Node("task");
-	child.append(t1);
-	t1.setAttribute("description");
-	Node f = Node("attachment");
-	f.setAttribute("file", "todo.b2");
-	t1.append(f);
 
-	// don't forget to clean up heap
-	Node * ptr_el = t1.append(new Node("attach"));
-	
-	ptr_el->setAttribute("data");
-	
-	Node * ptr_section = doc.root.firstChild();
+	Node format = Node("format");
+	resources.append(format);
+	format.setAttribute("id", "r1");
 
-	Node t2 = Node("task");
-	ptr_section->append(t2);
-	
-	t2.setAttribute("description", "pretty-print");
-	t2.setAttribute("completed", "true");
-	
-	cout << doc.getTitle() << endl;	
+	Node f = Node("effect");
+	f.setAttribute("id", "r2");
+	resources.append(f);
+
 	cout << doc.toXML();
 	
-	try {
-		doc.save();
-	} catch (const char* msg) {
-		cout << msg << endl;
-	} catch (...) {
-		cout << "Excepcellent" << endl;
-	}
-	
-	delete ptr_el;
-	
+	delete seq;
+	delete spine;
+	delete gap;
+
     return 0;
 }
 

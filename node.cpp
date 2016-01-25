@@ -3,9 +3,9 @@
 namespace R {
 
 	Node::Node():name("document") {
-		cerr << "<" + this->name + ">" << endl;
+		cerr << "Node <" << this->name << "> created" << endl;
 	}
-	Node::Node(string name):name(name) {
+	Node::Node(string name):name(name),value("") {
 		cerr << "Node <" << this->name << "> created" << endl;
 	}
 	
@@ -16,9 +16,13 @@ namespace R {
 	Node * Node::firstChild() {
 		return this->children[0];
 	}
-	
 	void Node::append(Node & node) {
 		this->children.push_back(&node);
+	}
+	Node * Node::append(string name) {
+		Node * ptr_node = new Node(name);
+		this->children.push_back(ptr_node);
+		return ptr_node;
 	}
 	Node * Node::append(Node * ptr_node) {
 		this->children.push_back(ptr_node);
@@ -34,7 +38,16 @@ namespace R {
 	void Node::setAttribute(string name) {
 		this->attr[name] = "";
 	}
-	
+	void Node::setAttribute(string name, int value) {
+		string line;
+		ostringstream oss(line);
+		oss << value;
+		this->attr[name] = oss.str();
+	}
+
+	void Node::setValue(string val) {
+		this->value = val;
+	}
 	string Node::toString(int margin) const {
 		
 		string out = this->name + " [";
@@ -65,11 +78,27 @@ namespace R {
 		for(auto it : attr) {
 			out += " " + it.first + "=\"" + it.second + "\"";
 		}
-		out += ">\n";
-		for(auto it : children) {
-			out += it->toXML(margin+1) + '\n';
+		
+		// empty node
+		if (children.empty() && value.empty()) {
+			out += " />";
+			return out;
 		}
-		out += string(margin, ' ') + "</" + this->name + ">";
+
+		out += ">";
+		if (!this->value.empty()) {
+			out += this->value;
+		} else {
+			out += "\n";
+		}
+		
+		for(auto it : children) {
+			out += it->toXML(margin+2) + '\n';
+		}
+		if (this->value.empty()) {
+			out += string(margin, ' ');
+		}
+		out += "</" + this->name + ">";
 		return out;
 	}
 	

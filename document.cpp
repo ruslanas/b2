@@ -2,19 +2,28 @@
 
 namespace R {
 	
-	Document::Document():title("Untitled") {
-		this->root = Node();
-	}
-	
 	Document::Document(string title):title(title) {
 		this->root = Node();
 	}
+	
 	Document::~Document() {
 		
 	}
 	
 	void Document::load(string path) {
-		cout << "Loading " << path << "..." << endl;
+		
+		this->path = path;
+		
+		ifstream ifs(path);
+		
+		string line;
+		getline(ifs, line);
+		auto pos = line.find(">");
+		cout << line.substr(0, pos) << endl;
+	}
+	void Document::save() {
+		ofstream ofs("temp.b2");
+		ofs << root.toString();
 	}
 	string Document::getTitle() const {
 		return title;

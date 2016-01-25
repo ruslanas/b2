@@ -3,11 +3,13 @@
 using namespace std;
 using namespace R;
 
-int main() {
+int main(int argc, char * argv[]) {
 
 	Document doc("App");
 	
-	doc.load("todo.b2");
+	if(argc > 1) {
+		doc.load(argv[1]);
+	}
 	
 	Node child = Node("todo");
 	doc.root.append(child);
@@ -22,7 +24,7 @@ int main() {
 	f.setAttribute("file", "todo.b2");
 	t1.append(f);
 
-	// dont forget to clean up heap
+	// don't forget to clean up heap
 	Node * ptr_el = t1.append(new Node("attach"));
 	
 	ptr_el->setAttribute("data");
@@ -37,6 +39,14 @@ int main() {
 	
 	cout << doc.getTitle() << endl;	
 	cout << doc;
+	
+	try {
+		doc.save();
+	} catch (const char* msg) {
+		cout << msg << endl;
+	} catch (...) {
+		cout << "Excepcellent" << endl;
+	}
 	
 	delete ptr_el;
 	

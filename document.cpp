@@ -22,8 +22,8 @@ namespace R {
 		cout << line.substr(0, pos) << endl;
 	}
 	void Document::save() {
-		ofstream ofs("temp.b2");
-		ofs << root.toString();
+		ofstream ofs("temp.xml");
+		ofs << this->toXML();
 	}
 	string Document::getTitle() const {
 		return title;
@@ -31,6 +31,9 @@ namespace R {
 	ostream & operator<< (ostream & os, Document & doc) {
 		os << doc.root.toString() << endl;
 		return os;
+	}
+	string Document::toXML() {
+		return "<?xml>\n" + root.toXML();
 	}
 }
 

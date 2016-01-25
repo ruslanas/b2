@@ -32,6 +32,7 @@ namespace R {
 			string getAttribute(string name);
 			Node * firstChild();
 			string toString(int margin = 0) const;
+			string toXML(int margin = 0);
 	
 	};
 	

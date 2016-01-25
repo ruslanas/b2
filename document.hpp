@@ -38,6 +38,7 @@ namespace R {
 			string getTitle() const;
 			void load(string path);
 			void save();
+			string toXML();
 	};
 	
 }

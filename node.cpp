@@ -60,6 +60,18 @@ namespace R {
 		return out;
 	}
 	
+	string Node::toXML(int margin) {
+		string out = string(margin, ' ') + "<" + this->name;
+		for(auto it : attr) {
+			out += " " + it.first + "=\"" + it.second + "\"";
+		}
+		out += ">\n";
+		for(auto it : children) {
+			out += it->toXML(margin+1) + '\n';
+		}
+		out += string(margin, ' ') + "</" + this->name + ">";
+		return out;
+	}
 	
 }
 

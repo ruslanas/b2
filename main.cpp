@@ -38,7 +38,7 @@ int main(int argc, char * argv[]) {
 	t2.setAttribute("completed", "true");
 	
 	cout << doc.getTitle() << endl;	
-	cout << doc;
+	cout << doc.toXML();
 	
 	try {
 		doc.save();

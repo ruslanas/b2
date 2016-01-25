@@ -1,5 +1,4 @@
 #include "document.hpp"
-#include "main.h"
 
 using namespace std;
 using namespace R;
